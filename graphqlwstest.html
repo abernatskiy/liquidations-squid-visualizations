@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title>GraphQL over WebSocket</title>
+		<script
+			type="text/javascript"
+			src="https://unpkg.com/graphql-ws/umd/graphql-ws.min.js"
+		></script>
+	</head>
+	<body>
+		<script type="text/javascript">
+			const client = graphqlWs.createClient({url: 'ws://localhost:4350/graphql'});
+
+			client.subscribe(
+				{
+					query: `
+						query {
+							liquidationEvents(limit: 10, orderBy: block_DESC) {
+								hash
+								block
+							}
+						}
+					`,
+				},
+				{
+					next: (data) => { console.log(`Latest liquidations: ${JSON.stringify(data)}`) },
+					error: (error) => { console.error('error', error) },
+					complete: () => { console.log('done!') },
+				}
+			);
+		</script>
+	</body>
+</html>
