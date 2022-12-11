@@ -15,12 +15,9 @@
 			client.subscribe(
 				{
 					query: `
-						query {
-							liquidationEvents(limit: 10, orderBy: block_DESC) {
-								hash
-								block
-							}
-						}
+						query { liquidationEvents(limit: 10, orderBy: block_DESC) {
+							block hash
+						}}
 					`,
 				},
 				{
