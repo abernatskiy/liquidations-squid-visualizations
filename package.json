@@ -12,6 +12,7 @@
 	"dependencies": {
 		"big.js": "^6.2.1",
 		"chart.js": "^4.0.0",
+		"chartjs-adapter-moment": "^1.0.1",
 		"graphql-ws": "^5.11.2"
 	}
 }
