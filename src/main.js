@@ -40,7 +40,10 @@ client.subscribe(
 		`,
 	},
 	{
-		next: rawReply => { console.log(rawReply) },
+		next: rawReply => {
+			let data = parseGraphQLReply(rawReply)
+			console.log(data)
+		},
 		error: error => { console.error('error', error) },
 		complete: () => { console.log('done!') },
 	}
