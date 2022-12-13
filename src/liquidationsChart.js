@@ -1,4 +1,5 @@
 import { Chart } from 'chart.js/auto'
+import 'chartjs-adapter-moment'
 
 export class LiquidationsChart {
 	dataPointsToChartInputs(dataPoints) {
@@ -25,8 +26,14 @@ export class LiquidationsChart {
 			data: chartData,
 			options: {
 				scales: {
-					x: { type: 'linear' },
-					y: { type: 'linear' }
+					x: { type: 'time' },
+					y: {
+						type: 'logarithmic',
+						title: {
+							text: 'WETH',
+							display: true
+						}
+					}
 				}
 			}
 		}
