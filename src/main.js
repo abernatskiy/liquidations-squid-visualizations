@@ -1,6 +1,8 @@
 import * as graphqlWs from 'graphql-ws'
 import { Big } from 'big.js'
 
+import { LiquidationsChart } from './liquidationsChart'
+
 const collateralToken = '0xC02aaA39b223FE8D0A0e5C4F27eAD9083C756Cc2' // WETH
 
 function weiStrToEth(weiStr, precision = 8) {
@@ -28,6 +30,7 @@ function parseGraphQLReply(reply) {
 }
 
 const client = graphqlWs.createClient({url: 'ws://localhost:4350/graphql'})
+const chart = new LiquidationsChart(document.getElementById('liquidations-chart'))
 client.subscribe(
 	{
 		query: `
@@ -43,7 +46,7 @@ client.subscribe(
 	{
 		next: rawReply => {
 			let data = parseGraphQLReply(rawReply)
-			console.log(data)
+			chart.addData(data)
 		},
 		error: error => { console.error('error', error) },
 		complete: () => { console.log('done!') },
