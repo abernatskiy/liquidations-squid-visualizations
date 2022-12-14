@@ -12,6 +12,7 @@ function parseGraphQLReply(reply) {
 	let rawData = reply['data']['liquidationEvents']
 	return rawData.map(dataPoint => {
 		return {
+			id: dataPoint['id'],
 			collateralAsset: dataPoint['collateralAsset'],
 			debtAsset: dataPoint['debtAsset'],
 			user: dataPoint['user'],
@@ -32,7 +33,7 @@ client.subscribe(
 		query: `
 			query {
 				liquidationEvents(where: {timestamp_gt: 1667906014000, collateralAsset_eq: "${collateralToken}"}) {
-					collateralAsset debtAsset user debtToCover
+					id collateralAsset debtAsset user debtToCover
 					liquidatedCollateralAmount liquidator
 					receiveAToken block timestamp hash
 				}
