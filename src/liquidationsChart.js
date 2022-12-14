@@ -2,8 +2,9 @@ import { Chart } from 'chart.js/auto'
 
 export class LiquidationsChart {
 	dataPointsToChartInputs(dataPoints) {
+		let ids = dataPoints.map(dp => dp.id)
 		let data = dataPoints.map(dp => ({ x: dp.timestamp, y: dp.liquidatedCollateralAmount }))
-		return { data }
+		return { ids, data }
 	}
 
 	constructor(canvas) {
@@ -31,7 +32,8 @@ export class LiquidationsChart {
 	}
 
 	addData(rawData) {
-		let { data } = this.dataPointsToChartInputs(rawData)
+		let { ids, data } = this.dataPointsToChartInputs(rawData)
+		this.chart.data.datasets[0].ids.push(...ids)
 		this.chart.data.datasets[0].data.push(...data)
 		this.chart.update()
 	}
