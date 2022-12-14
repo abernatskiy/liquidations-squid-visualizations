@@ -2,21 +2,19 @@ import { Chart } from 'chart.js/auto'
 
 export class LiquidationsChart {
 	dataPointsToChartInputs(dataPoints) {
-		let data = [...dataPoints].map(dp => {
+		let data = dataPoints.map(dp => {
 			return { x: dp.timestamp, y: dp.liquidatedCollateralAmount }
 		})
 		return { data }
 	}
 
-	constructor(canvas, initialData) {
-		this.data = new Set(initialData)
-
+	constructor(canvas) {
 		const chartData = {
 			datasets: [{
 				label: 'AAVE v2 liquidations',
 				borderWidth: 2,
 				pointRadius: 3,
-				...this.dataPointsToChartInputs(this.data)
+				...this.dataPointsToChartInputs([])
 			}]
 		}
 
@@ -32,5 +30,11 @@ export class LiquidationsChart {
 		}
 
 		this.chart = new Chart(canvas, config)
+	}
+
+	addData(rawData) {
+		let { data } = this.dataPointsToChartInputs(rawData)
+		this.chart.data.datasets[0].data.push(...data)
+		this.chart.update()
 	}
 }
