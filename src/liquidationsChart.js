@@ -40,11 +40,13 @@ export class LiquidationsChart {
 			// by extension timesteps, are "atomic" in a sense that
 			// any arriving data will include all events of the block
 			// or none at all
-			while ( currentData.at(-1).x >= data.at(shift).x ) {
+			while ( shift<data.length && currentData.at(-1).x>=data.at(shift).x ) {
 				shift++
 			}
 		}
 		data.splice(0, shift)
+		console.log(`Added ${data.length} points`)
+		console.log(data)
 		this.chart.data.datasets[0].data.push(...data)
 		this.chart.update()
 	}
