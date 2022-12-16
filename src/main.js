@@ -31,24 +31,62 @@ function parseGraphQLReply(reply) {
 
 const client = graphqlWs.createClient({url: 'ws://localhost:4350/graphql'})
 const chart = new LiquidationsChart(document.getElementById('liquidations-chart'))
-client.subscribe(
-	{
-		query: `
-			query {
-				liquidationEvents(where: {timestamp_gt: 1667906014000, collateralAsset_eq: "${collateralToken}"}) {
-					id collateralAsset debtAsset user debtToCover
-					liquidatedCollateralAmount liquidator
-					receiveAToken block timestamp hash
+
+function doPlotUpdates() {
+	client.subscribe(
+		{
+			query: `
+				subscription {
+					liquidationEvents(where: {timestamp_gt: 1668552500000, collateralAsset_eq: "${collateralToken}"}) {
+						id collateralAsset debtAsset user debtToCover
+						liquidatedCollateralAmount liquidator
+						receiveAToken block timestamp hash
+					}
 				}
-			}
-		`,
-	},
-	{
-		next: rawReply => {
-			let data = parseGraphQLReply(rawReply)
-			chart.addData(data)
+			`,
 		},
-		error: error => { console.error('error', error) },
-		complete: () => { console.log('done!') },
-	}
-)
+		{
+			next: rawReply => {
+				let data = parseGraphQLReply(rawReply)
+				chart.addData(data)
+			},
+			error: error => {
+				throw `Error updating the plot: ${error}`
+			},
+			complete: () => {
+				console.log('done!')
+			},
+		}
+	)
+}
+
+function doAllPlotting() {
+	client.subscribe(
+		{
+			query: `
+				query {
+					liquidationEvents(where: {timestamp_gt: 1667906014000, collateralAsset_eq: "${collateralToken}"}) {
+						id collateralAsset debtAsset user debtToCover
+						liquidatedCollateralAmount liquidator
+						receiveAToken block timestamp hash
+					}
+				}
+			`,
+		},
+		{
+			next: rawReply => {
+				let data = parseGraphQLReply(rawReply)
+				chart.addData(data)
+			},
+			error: error => {
+				throw `Error retrieving initial data: ${error}`
+			},
+			complete: () => {
+				console.log('done but now to updates!')
+				doPlotUpdates()
+			},
+		}
+	)
+}
+
+doAllPlotting()
