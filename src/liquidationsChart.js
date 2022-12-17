@@ -30,19 +30,25 @@ export class LiquidationsChart {
 		this.chart = new Chart(canvas, config)
 	}
 
+	getMaxTimestamp() {
+		return this.chart.data.datasets[0].data.at(-1).x
+	}
+
 	addData(rawData) {
 		let { data } = this.dataPointsToChartInputs(rawData)
 		let currentData = this.chart.data.datasets[0].data
 		let shift = 0
-		if ( currentData.length > 0) {
-			// Determining the data overlap by looking at timesteps
-			// No need to do an intra-timestep search: blocks, and
-			// by extension timesteps, are "atomic" in a sense that
-			// any arriving data will include all events of the block
-			// or none at all
-			while ( shift<data.length && currentData.at(-1).x>=data.at(shift).x ) {
-				shift++
-			}
+		// Determining the data overlap by looking at timesteps
+		// No need to do an intra-timestep search: blocks, and
+		// by extension timesteps, are "atomic" in a sense that
+		// any arriving data will include all events of the block
+		// or none at all
+		while (
+			currentData.length>0 &&
+			shift<data.length &&
+			this.getMaxTimestamp()>=data.at(shift).x
+		) {
+			shift++
 		}
 		data.splice(0, shift)
 		console.log(`Added ${data.length} points`)
