@@ -1,5 +1,6 @@
 import { Chart } from 'chart.js/auto'
 import zoomPlugin from 'chartjs-plugin-zoom'
+import 'chartjs-adapter-moment'
 
 Chart.register(zoomPlugin)
 
@@ -35,8 +36,14 @@ export class LiquidationsChart {
 			data: chartData,
 			options: {
 				scales: {
-					x: { type: 'linear' },
-					y: { type: 'linear' }
+					x: { type: 'time' },
+					y: {
+						type: 'logarithmic',
+						title: {
+							text: 'WETH',
+							display: true
+						}
+					}
 				},
 				plugins: pluginsConfig
 			}
