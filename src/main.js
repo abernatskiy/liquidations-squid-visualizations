@@ -117,3 +117,7 @@ processTimescaleChange = (arg) => {
 	chart.clearData()
 	doAllPlotting(arg)
 }
+
+resetZoom = () => {
+	chart.resetZoom()
+}

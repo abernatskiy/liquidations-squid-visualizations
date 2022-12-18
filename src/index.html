@@ -9,10 +9,12 @@
 
 		<!-- <script type="module" src="dimensions.js"></script> -->
 		<script type="module" src="main.js">
-			// global handles for use in the select form
+			// global handles for use in the UI
 			var processTimescaleChange
+			var resetZoom
 		</script>
 
+		<!-- The UI -->
 		<label for="Timescales">Timescale:</label>
 		<select name="timescalesSelect" onchange="processTimescaleChange(this.value)" autocomplete="off">
 			<option value="1 week">1 week</option>
@@ -20,5 +22,6 @@
 			<option value="1 year">1 year</option>
 			<option value="all">all</option>
 		</select>
+		<button onclick="resetZoom()">Reset zoom</button>
 	</body>
 </html>

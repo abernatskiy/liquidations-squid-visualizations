@@ -76,4 +76,8 @@ export class LiquidationsChart {
 		this.chart.data.datasets[0].data.length = 0 // clears the array
 		this.chart.update()
 	}
+
+	resetZoom() {
+		this.chart.resetZoom()
+	}
 }
