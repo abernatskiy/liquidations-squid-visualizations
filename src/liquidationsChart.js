@@ -7,7 +7,8 @@ Chart.register(zoomPlugin)
 export class LiquidationsChart {
 	dataPointsToChartInputs(dataPoints) {
 		let data = dataPoints.map(dp => ({ x: dp.timestamp, y: dp.liquidatedCollateralAmount }))
-		return { data }
+		let fullData = dataPoints.map(dp => dp)
+		return { data, fullData }
 	}
 
 	constructor(canvas) {
@@ -21,6 +22,14 @@ export class LiquidationsChart {
 		}
 
 		const pluginsConfig = {
+			tooltip: {
+				callbacks: {
+					label: (ctx) => {
+						let fullDataPoint = ctx.chart.data.datasets[ctx.datasetIndex].fullData[ctx.dataIndex]
+						return Object.entries(fullDataPoint).map(([k, v], i) => `${k}: ${v}`)
+					}
+				}
+			},
 			zoom: {
 				zoom: {
 					mode: 'x',
@@ -57,7 +66,7 @@ export class LiquidationsChart {
 	}
 
 	addData(rawData) {
-		let { data } = this.dataPointsToChartInputs(rawData)
+		let { data, fullData } = this.dataPointsToChartInputs(rawData)
 		let currentData = this.chart.data.datasets[0].data
 		let shift = 0
 		// Determining the data overlap by looking at timesteps
@@ -73,9 +82,11 @@ export class LiquidationsChart {
 			shift++
 		}
 		data.splice(0, shift)
+		fullData.splice(0, shift)
 		console.log(`Added ${data.length} points`)
 		console.log(data)
 		this.chart.data.datasets[0].data.push(...data)
+		this.chart.data.datasets[0].fullData.push(...fullData)
 		this.chart.update()
 	}
 
