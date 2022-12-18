@@ -60,20 +60,40 @@ function doPlotUpdates(startAtTimestamp) {
 	)
 }
 
-function doAllPlotting() {
-	let maxStaticTimestamp;
-	client.subscribe(
-		{
-			query: `
-				query {
-					liquidationEvents(orderBy: timestamp_ASC, where: {timestamp_gt: 1667906014000, collateralAsset_eq: "${COLLATERAL_TOKEN}"}) {
-						id collateralAsset debtAsset user debtToCover
-						liquidatedCollateralAmount liquidator
-						receiveAToken block timestamp hash
-					}
+function doAllPlotting(timeHorizon) {
+	const timeHorizonToMillisecondsAgo = {
+		'1 week': 7*24*60*60*1000,
+		'1 month': 30.437*24*60*60*1000,
+		'1 year': 365.2422*24*60*60*1000
+	}
+	let query
+	if ( timeHorizon==='all' ) {
+		query = `
+			query {
+				liquidationEvents(orderBy: timestamp_ASC, where: {collateralAsset_eq: "${COLLATERAL_TOKEN}"}) {
+					id collateralAsset debtAsset user debtToCover
+					liquidatedCollateralAmount liquidator
+					receiveAToken block timestamp hash
 				}
-			`,
-		},
+			}
+		`
+	} else {
+		let timeHorizonTimestampDiff = timeHorizonToMillisecondsAgo[timeHorizon]
+		let minTimestamp = new Date().getTime() - timeHorizonTimestampDiff
+		query = `
+			query {
+				liquidationEvents(orderBy: timestamp_ASC, where: {timestamp_gt: ${minTimestamp}, collateralAsset_eq: "${COLLATERAL_TOKEN}"}) {
+					id collateralAsset debtAsset user debtToCover
+					liquidatedCollateralAmount liquidator
+					receiveAToken block timestamp hash
+				}
+			}
+		`
+	}
+
+	let maxStaticTimestamp
+	client.subscribe(
+		{ query },
 		{
 			next: rawReply => {
 				let data = parseGraphQLReply(rawReply)
@@ -91,4 +111,9 @@ function doAllPlotting() {
 	)
 }
 
-doAllPlotting()
+doAllPlotting('1 month')
+
+processTimescaleChange = (arg) => {
+	chart.clearData()
+	doAllPlotting(arg)
+}

@@ -8,6 +8,17 @@
 		<div style="width: 800px;"><canvas id="liquidations-chart"></canvas></div>
 
 		<!-- <script type="module" src="dimensions.js"></script> -->
-		<script type="module" src="main.js"></script>
+		<script type="module" src="main.js">
+			// global handles for use in the select form
+			var processTimescaleChange
+		</script>
+
+		<label for="Timescales">Timescale:</label>
+		<select name="timescalesSelect" onchange="processTimescaleChange(this.value)" autocomplete="off">
+			<option value="1 week">1 week</option>
+			<option value="1 month" selected="selected">1 month</option>
+			<option value="1 year">1 year</option>
+			<option value="all">all</option>
+		</select>
 	</body>
 </html>
