@@ -1,6 +1,7 @@
 import { Chart } from 'chart.js/auto'
 import zoomPlugin from 'chartjs-plugin-zoom'
 import 'chartjs-adapter-moment'
+import { QuasiCyclicPointProperty } from './quasiCyclicPointProperty'
 
 Chart.register(zoomPlugin)
 
@@ -8,7 +9,10 @@ export class LiquidationsChart {
 	dataPointsToChartInputs(dataPoints) {
 		let data = dataPoints.map(dp => ({ x: dp.timestamp, y: dp.liquidatedCollateralAmount }))
 		let fullData = dataPoints.map(dp => dp)
-		return { data, fullData }
+		let backgroundColor = dataPoints.map(dp => this.colorMapping.getProperty(dp.liquidator))
+		let borderColor = backgroundColor
+		let pointStyle = dataPoints.map(dp => this.styleMapping.getProperty(dp.debtAsset))
+		return { data, fullData, backgroundColor, borderColor, pointStyle }
 	}
 
 	constructor(canvas) {
@@ -16,7 +20,7 @@ export class LiquidationsChart {
 			datasets: [{
 				label: 'AAVE v2 liquidations',
 				borderWidth: 2,
-				pointRadius: 3,
+				pointRadius: 4,
 				...this.dataPointsToChartInputs([])
 			}]
 		}
@@ -59,6 +63,9 @@ export class LiquidationsChart {
 		}
 
 		this.chart = new Chart(canvas, config)
+
+		this.colorMapping = new QuasiCyclicPointProperty('color')
+		this.styleMapping = new QuasiCyclicPointProperty('style')
 	}
 
 	getMaxTimestamp() {
@@ -66,7 +73,7 @@ export class LiquidationsChart {
 	}
 
 	addData(rawData) {
-		let { data, fullData } = this.dataPointsToChartInputs(rawData)
+		let { data, fullData, backgroundColor, borderColor, pointStyle } = this.dataPointsToChartInputs(rawData)
 		let currentData = this.chart.data.datasets[0].data
 		let shift = 0
 		// Determining the data overlap by looking at timesteps
@@ -83,10 +90,16 @@ export class LiquidationsChart {
 		}
 		data.splice(0, shift)
 		fullData.splice(0, shift)
+		backgroundColor.splice(0, shift)
+		borderColor.splice(0, shift)
+		pointStyle.splice(0, shift)
 		console.log(`Added ${data.length} points`)
 		console.log(data)
 		this.chart.data.datasets[0].data.push(...data)
 		this.chart.data.datasets[0].fullData.push(...fullData)
+		this.chart.data.datasets[0].backgroundColor.push(...backgroundColor)
+		this.chart.data.datasets[0].borderColor.push(...borderColor)
+		this.chart.data.datasets[0].pointStyle.push(...pointStyle)
 		this.chart.update()
 	}
 
