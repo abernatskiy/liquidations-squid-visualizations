@@ -1,4 +1,7 @@
 import { Chart } from 'chart.js/auto'
+import zoomPlugin from 'chartjs-plugin-zoom'
+
+Chart.register(zoomPlugin)
 
 export class LiquidationsChart {
 	dataPointsToChartInputs(dataPoints) {
@@ -16,6 +19,17 @@ export class LiquidationsChart {
 			}]
 		}
 
+		const pluginsConfig = {
+			zoom: {
+				zoom: {
+					mode: 'x',
+					drag: {
+						enabled: true
+					}
+				}
+			}
+		}
+
 		const config = {
 			type: 'scatter',
 			data: chartData,
@@ -23,7 +37,8 @@ export class LiquidationsChart {
 				scales: {
 					x: { type: 'linear' },
 					y: { type: 'linear' }
-				}
+				},
+				plugins: pluginsConfig
 			}
 		}
 
