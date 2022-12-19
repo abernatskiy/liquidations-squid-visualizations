@@ -121,3 +121,11 @@ processTimescaleChange = (arg) => {
 resetZoom = () => {
 	chart.resetZoom()
 }
+
+recolorPoints = (arg) => {
+	chart.recolorPoints(arg)
+}
+
+restylePoints = (arg) => {
+	chart.restylePoints(arg)
+}

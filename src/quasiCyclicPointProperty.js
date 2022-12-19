@@ -59,4 +59,10 @@ export class QuasiCyclicPointProperty {
 
 		return newPropertyValue
 	}
+
+	reset() {
+		this.currentIdx = 0
+		this.mapping = {}
+		this.recentlyReturnedPropertyValues = new Set()
+	}
 }

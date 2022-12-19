@@ -12,10 +12,12 @@
 			// global handles for use in the UI
 			var processTimescaleChange
 			var resetZoom
+			var recolorPoints
+			var restylePoints
 		</script>
 
 		<!-- The UI -->
-		<label for="Timescales">Timescale:</label>
+		<label for="timescalesSelect">Timescale:</label>
 		<select name="timescalesSelect" onchange="processTimescaleChange(this.value)" autocomplete="off">
 			<option value="1 week">1 week</option>
 			<option value="1 month" selected="selected">1 month</option>
@@ -23,5 +25,21 @@
 			<option value="all">all</option>
 		</select>
 		<button onclick="resetZoom()">Reset zoom</button>
+		<label for="colorChannelSelect">Colored with:</label>
+		<select name="colorChannelSelect" onchange="recolorPoints(this.value)" autocomplete="off">
+			<option value="collateralAsset">collateralAsset</option>
+			<option value="debtAsset">debtAsset</option>
+			<option value="user">user</option>
+			<option value="liquidator" selected="selected">liquidator</option>
+		</select>
+		<label for="styleChannelSelect">Styled with:</label>
+		<select name="styleChannelSelect" onchange="restylePoints(this.value)" autocomplete="off">
+			<option value="collateralAsset">collateralAsset</option>
+			<option value="debtAsset" selected="selected">debtAsset</option>
+			<option value="user">user</option>
+			<option value="liquidator">liquidator</option>
+		</select>
+
+
 	</body>
 </html>

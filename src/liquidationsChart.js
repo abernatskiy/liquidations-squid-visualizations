@@ -111,4 +111,24 @@ export class LiquidationsChart {
 	resetZoom() {
 		this.chart.resetZoom()
 	}
+
+	recolorPoints(newColorField) {
+		this.rebindPointProperties(newColorField, 'colorMapping', ['backgroundColor', 'borderColor'])
+	}
+
+	restylePoints(newStyleField) {
+		this.rebindPointProperties(newStyleField, 'styleMapping', ['pointStyle'])
+	}
+
+	rebindPointProperties(newFieldToBind, mapping, datasetArraysToRedo) {
+		this[mapping].reset()
+		let chartDataset = this.chart.data.datasets[0]
+		chartDataset.fullData.forEach((dp, i) => {
+			let newValue = this[mapping].getProperty(dp[newFieldToBind])
+			for ( let dsArray of datasetArraysToRedo ) {
+				chartDataset[dsArray][i] = newValue
+			}
+		})
+		this.chart.update('none')
+	}
 }
