@@ -29,7 +29,7 @@ function parseGraphQLReply(reply) {
 	})
 }
 
-const client = graphqlWs.createClient({url: 'ws://localhost:4350/graphql'})
+const client = graphqlWs.createClient({url: 'wss://squid.subsquid.io/aave-v2-liquidations-ws/v/v1/graphql'})
 const chart = new LiquidationsChart(document.getElementById('liquidations-chart'))
 
 function doPlotUpdates(startAtTimestamp) {
