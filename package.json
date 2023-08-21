@@ -4,7 +4,7 @@
 	"license": "MIT",
 	"scripts": {
 		"dev": "parcel src/index.html",
-		"build": "parcel build src/index.html"
+		"build": "parcel build src/index.html --no-scope-hoist"
 	},
 	"devDependencies": {
 		"parcel": "^2.8.1"
