@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 	<head>
 		<title>AAVE v2 liquidations</title>
@@ -6,13 +6,14 @@
 	<body>
 		<div style="width: 1000px;"><canvas id="liquidations-chart"></canvas></div>
 
-		<script type="module" src="main.js">
+		<script>
 			// global handles for use in the UI
 			var processTimescaleChange
 			var resetZoom
 			var recolorPoints
 			var restylePoints
 		</script>
+		<script type="module" src="main.js"></script>
 
 		<!-- The UI -->
 		<label for="timescalesSelect">Timescale:</label>
